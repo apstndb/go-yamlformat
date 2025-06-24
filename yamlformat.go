@@ -20,15 +20,16 @@ const (
 
 // Common options for consistent behavior
 var (
-	// MarshalOptions are the default options for marshaling
-	MarshalOptions = []yaml.EncodeOption{
+	// marshalOptions are the default options for marshaling
+	marshalOptions = []yaml.EncodeOption{
 		yaml.UseJSONMarshaler(),
 		yaml.AutoInt(),
 		yaml.UseLiteralStyleIfMultiline(true),
+		yaml.CustomMarshaler[float64](marshalFloat64),
 	}
 	
-	// UnmarshalOptions are the default options for unmarshaling
-	UnmarshalOptions = []yaml.DecodeOption{
+	// unmarshalOptions are the default options for unmarshaling
+	unmarshalOptions = []yaml.DecodeOption{
 		yaml.UseJSONUnmarshaler(),
 	}
 )
@@ -61,14 +62,14 @@ func ParseFormat(s string) (Format, error) {
 
 // Marshal marshals data to YAML bytes using consistent options
 func Marshal(v interface{}, opts ...yaml.EncodeOption) ([]byte, error) {
-	allOpts := append([]yaml.EncodeOption{}, MarshalOptions...)
+	allOpts := append([]yaml.EncodeOption{}, marshalOptions...)
 	allOpts = append(allOpts, opts...)
 	return yaml.MarshalWithOptions(v, allOpts...)
 }
 
 // MarshalJSON marshals data to JSON bytes
 func MarshalJSON(v interface{}, opts ...yaml.EncodeOption) ([]byte, error) {
-	allOpts := append([]yaml.EncodeOption{}, MarshalOptions...)
+	allOpts := append([]yaml.EncodeOption{}, marshalOptions...)
 	allOpts = append(allOpts, yaml.JSON())
 	allOpts = append(allOpts, opts...)
 	return yaml.MarshalWithOptions(v, allOpts...)
@@ -76,21 +77,21 @@ func MarshalJSON(v interface{}, opts ...yaml.EncodeOption) ([]byte, error) {
 
 // Unmarshal unmarshals YAML/JSON bytes using consistent options
 func Unmarshal(data []byte, v interface{}, opts ...yaml.DecodeOption) error {
-	allOpts := append([]yaml.DecodeOption{}, UnmarshalOptions...)
+	allOpts := append([]yaml.DecodeOption{}, unmarshalOptions...)
 	allOpts = append(allOpts, opts...)
 	return yaml.UnmarshalWithOptions(data, v, allOpts...)
 }
 
 // NewEncoder creates a new YAML encoder with consistent options
 func NewEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder {
-	allOpts := append([]yaml.EncodeOption{}, MarshalOptions...)
+	allOpts := append([]yaml.EncodeOption{}, marshalOptions...)
 	allOpts = append(allOpts, opts...)
 	return yaml.NewEncoder(w, allOpts...)
 }
 
 // NewJSONEncoder creates a new JSON encoder with consistent options
 func NewJSONEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder {
-	allOpts := append([]yaml.EncodeOption{}, MarshalOptions...)
+	allOpts := append([]yaml.EncodeOption{}, marshalOptions...)
 	allOpts = append(allOpts, yaml.JSON())
 	allOpts = append(allOpts, opts...)
 	return yaml.NewEncoder(w, allOpts...)

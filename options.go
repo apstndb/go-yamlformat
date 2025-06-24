@@ -2,30 +2,22 @@ package yamlformat
 
 import "github.com/goccy/go-yaml"
 
-// DefaultMarshalOptions returns a copy of the default marshal options
-func DefaultMarshalOptions() []yaml.EncodeOption {
-	return append([]yaml.EncodeOption{}, MarshalOptions...)
+// defaultMarshalOptions returns a copy of the default marshal options
+func defaultMarshalOptions() []yaml.EncodeOption {
+	return append([]yaml.EncodeOption{}, marshalOptions...)
 }
 
-// DefaultUnmarshalOptions returns a copy of the default unmarshal options
-func DefaultUnmarshalOptions() []yaml.DecodeOption {
-	return append([]yaml.DecodeOption{}, UnmarshalOptions...)
+// defaultUnmarshalOptions returns a copy of the default unmarshal options
+func defaultUnmarshalOptions() []yaml.DecodeOption {
+	return append([]yaml.DecodeOption{}, unmarshalOptions...)
 }
 
 // WithMarshalOptions creates a new set of options by appending to defaults
 func WithMarshalOptions(opts ...yaml.EncodeOption) []yaml.EncodeOption {
-	return append(DefaultMarshalOptions(), opts...)
+	return append(defaultMarshalOptions(), opts...)
 }
 
 // WithUnmarshalOptions creates a new set of options by appending to defaults
 func WithUnmarshalOptions(opts ...yaml.DecodeOption) []yaml.DecodeOption {
-	return append(DefaultUnmarshalOptions(), opts...)
-}
-
-// WithJSONMarshalOptions creates a new set of JSON encoding options
-func WithJSONMarshalOptions(opts ...yaml.EncodeOption) []yaml.EncodeOption {
-	allOpts := DefaultMarshalOptions()
-	allOpts = append(allOpts, yaml.JSON())
-	allOpts = append(allOpts, opts...)
-	return allOpts
+	return append(defaultUnmarshalOptions(), opts...)
 }

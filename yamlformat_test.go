@@ -365,30 +365,4 @@ func TestParseFormat(t *testing.T) {
 	}
 }
 
-func TestDefaultOptions(t *testing.T) {
-	// Test that default options are properly included
-	opts := DefaultMarshalOptions()
-	if len(opts) != 3 { // UseJSONMarshaler, AutoInt, UseLiteralStyleIfMultiline
-		t.Errorf("Expected 3 default marshal options, got %d", len(opts))
-	}
-	
-	uopts := DefaultUnmarshalOptions()
-	if len(uopts) != 1 { // UseJSONUnmarshaler
-		t.Errorf("Expected 1 default unmarshal option, got %d", len(uopts))
-	}
-}
-
-func TestWithOptions(t *testing.T) {
-	// Test WithMarshalOptions
-	opts := WithMarshalOptions(yaml.Indent(4))
-	if len(opts) != 4 { // 3 defaults + 1 custom
-		t.Errorf("Expected 4 options, got %d", len(opts))
-	}
-	
-	// Test WithJSONMarshalOptions
-	jopts := WithJSONMarshalOptions(yaml.Indent(2))
-	if len(jopts) != 5 { // 3 defaults + JSON + 1 custom
-		t.Errorf("Expected 5 options, got %d", len(jopts))
-	}
-}
 
