@@ -58,9 +58,16 @@ func main() {
         panic(err)
     }
     
-    // Create encoder for streaming
-    encoder := yamlformat.NewEncoderForFormat(os.Stdout, yamlformat.FormatYAML)
+    // Create encoder for streaming with format selection
+    format := yamlformat.FormatYAML  // or yamlformat.FormatJSON
+    encoder := yamlformat.NewEncoderForFormat(os.Stdout, format)
     encoder.Encode(data)
+    
+    // Format can be parsed from string
+    format, err = yamlformat.ParseFormat("json")
+    if err != nil {
+        panic(err)
+    }
 }
 ```
 
