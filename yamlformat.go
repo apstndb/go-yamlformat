@@ -38,6 +38,18 @@ func (f Format) IsValid() bool {
 	return f == FormatYAML || f == FormatJSON
 }
 
+// NewEncoder creates a new encoder for this format
+func (f Format) NewEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder {
+	switch f {
+	case FormatJSON:
+		return NewJSONEncoder(w, opts...)
+	case FormatYAML:
+		return NewEncoder(w, opts...)
+	default:
+		return NewEncoder(w, opts...) // Default to YAML
+	}
+}
+
 // ParseFormat parses a string into a Format
 func ParseFormat(s string) (Format, error) {
 	format := Format(strings.ToLower(s))
@@ -85,6 +97,7 @@ func NewJSONEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder {
 }
 
 // NewEncoderForFormat creates a new encoder for the specified format
+// Deprecated: Use Format.NewEncoder instead
 func NewEncoderForFormat(w io.Writer, format Format) *yaml.Encoder {
 	switch format {
 	case FormatJSON:

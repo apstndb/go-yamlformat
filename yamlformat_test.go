@@ -225,6 +225,52 @@ func TestNewJSONEncoder(t *testing.T) {
 	}
 }
 
+func TestFormatNewEncoder(t *testing.T) {
+	tests := []struct {
+		name   string
+		format Format
+		input  map[string]interface{}
+		want   string
+	}{
+		{
+			name:   "YAML format",
+			format: FormatYAML,
+			input:  map[string]interface{}{"key": "value"},
+			want:   "key: value\n",
+		},
+		{
+			name:   "JSON format",
+			format: FormatJSON,
+			input:  map[string]interface{}{"key": "value"},
+			want:   `{"key": "value"}`,
+		},
+		{
+			name:   "invalid format defaults to YAML",
+			format: Format("invalid"),
+			input:  map[string]interface{}{"key": "value"},
+			want:   "key: value\n",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var buf bytes.Buffer
+			encoder := tt.format.NewEncoder(&buf)
+			
+			err := encoder.Encode(tt.input)
+			if err != nil {
+				t.Fatalf("Encode failed: %v", err)
+			}
+			
+			got := strings.TrimSpace(buf.String())
+			want := strings.TrimSpace(tt.want)
+			if got != want {
+				t.Errorf("Encode() = %q, want %q", got, want)
+			}
+		})
+	}
+}
+
 func TestNewEncoderForFormat(t *testing.T) {
 	tests := []struct {
 		name   string
