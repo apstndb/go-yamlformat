@@ -1,5 +1,7 @@
 # go-yamlformat
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/apstndb/go-yamlformat.svg)](https://pkg.go.dev/github.com/apstndb/go-yamlformat)
+
 A Go package for consistent YAML/JSON formatting using goccy/go-yaml.
 
 ## Features
