@@ -28,6 +28,7 @@ import (
     "fmt"
     "os"
     "github.com/apstndb/go-yamlformat"
+    "github.com/goccy/go-yaml"
 )
 
 func main() {
@@ -60,8 +61,14 @@ func main() {
     
     // Create encoder for streaming with format selection
     format := yamlformat.FormatYAML  // or yamlformat.FormatJSON
-    encoder := yamlformat.NewEncoderForFormat(os.Stdout, format)
+    encoder := format.NewEncoder(os.Stdout)
     encoder.Encode(data)
+    
+    // Marshal data using format
+    output, err := format.Marshal(data)
+    if err != nil {
+        panic(err)
+    }
     
     // Format can be parsed from string
     format, err = yamlformat.ParseFormat("json")
@@ -86,8 +93,15 @@ func main() {
 - `Unmarshal(data []byte, v interface{}, opts ...yaml.DecodeOption) error`: Unmarshal from YAML/JSON bytes
 - `NewEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder`: Create YAML encoder
 - `NewJSONEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder`: Create JSON encoder
-- `NewEncoderForFormat(w io.Writer, format Format) *yaml.Encoder`: Create encoder for specified format
 - `ParseFormat(s string) (Format, error)`: Parse format string ("yaml" or "json")
+- `WithMarshalOptions(opts ...yaml.EncodeOption) []yaml.EncodeOption`: Create options with defaults
+- `WithUnmarshalOptions(opts ...yaml.DecodeOption) []yaml.DecodeOption`: Create options with defaults
+
+### Format Methods
+
+- `(f Format) IsValid() bool`: Check if format is valid
+- `(f Format) Marshal(v interface{}, opts ...yaml.EncodeOption) ([]byte, error)`: Marshal data in this format
+- `(f Format) NewEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder`: Create encoder for this format
 
 ### Default Options
 

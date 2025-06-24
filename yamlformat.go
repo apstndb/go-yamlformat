@@ -39,6 +39,18 @@ func (f Format) IsValid() bool {
 	return f == FormatYAML || f == FormatJSON
 }
 
+// Marshal marshals data to bytes in this format
+func (f Format) Marshal(v interface{}, opts ...yaml.EncodeOption) ([]byte, error) {
+	switch f {
+	case FormatJSON:
+		return MarshalJSON(v, opts...)
+	case FormatYAML:
+		return Marshal(v, opts...)
+	default:
+		return Marshal(v, opts...) // Default to YAML
+	}
+}
+
 // NewEncoder creates a new encoder for this format
 func (f Format) NewEncoder(w io.Writer, opts ...yaml.EncodeOption) *yaml.Encoder {
 	switch f {
